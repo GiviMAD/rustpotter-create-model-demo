@@ -1,0 +1,30 @@
+{
+  "name": "rustpotter-model-build-demo",
+  "version": "1.0.0",
+  "description": "Demo for rustpotter model creation, rustpotter is an open source wake word spotter forged in rust",
+  "main": "dist/index.js",
+  "license": "Apache-2.0",
+  "private": true,
+  "collaborators": [
+    "Miguel Álvarez Díez <miguelwork92@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GiviMAD/rustpotter-worklet-demo"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build:web": "rm -rf docs && NODE_ENV=production webpack",
+    "start": "webpack-dev-server"
+  },
+  "dependencies": {
+    "opus-recorder": "^8.0.5",
+    "rustpotter-web": "1.1.1"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
+  }
+}

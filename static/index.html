@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Rustpotter Build Model Demo!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="description">
+    <div class="logo_container">
+      <img class="logo" src="logo.png">
+    </div>
+    <br>
+    <div class="text">
+      <span>This is a demo website for </span><a href="https://github.com/GiviMAD/rustpotter">Rustpotter</a><span>, an open source wake word spotter forged in rust.</span>
+      <br>
+    </div>
+  </div>
+  <div class="records_panel-outer">
+    <div id="wakeword_panel" class="records_panel">
+      <span>Name: </span>
+      <input id="wakeword_name" type="text" autocomplete="false"/>
+      <div id="btn_panel" class="btn-panel">
+        <button id="record" disabled="true" type="button">Start Recording</button>
+        <button id="stop" disabled="true" type="button">Stop Recording</button>
+        <button id="upload" disabled="true" type="button">Upload Record</button>
+        <input type="file" id="hidden_upload" accept="audio/x-wav" multiple hidden/>
+      </div>
+      <span>Records: </span>
+      <ul class="record_list" id="records"></ul>
+      <div id="btn_panel" class="btn-panel">
+        <button id="build" disabled="true" type="button">Build</button>
+      </div>
+    </div>
+  </div>
+  <div class="terminal">
+    <code id="terminal" contenteditable="false">
+    </code>
+  </div>
+  <div class="author">
+    <a id="rustpotter_version"></a>
+    <a href="https://github.com/GiviMAD">@GiviMAD</a>
+  </div>
+  <script src="index.js"></script>
+</body>
+
+</html>

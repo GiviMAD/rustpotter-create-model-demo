@@ -1,0 +1,107 @@
+body {
+  font-size: 15px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  margin: 0px;
+  background-color: rgb(157, 203, 204);
+}
+
+.description .logo {
+  width: 85px;
+}
+
+.description .logo_container {
+  text-align: center;
+  background-color: cadetblue;
+}
+
+.description .text {
+  font-size: 20px;
+  font-family: American Typewriter;
+  padding: 22px;
+  text-align: center;
+}
+
+.records_panel span {
+  margin-left: 6px;
+}
+.records_panel input[type=text] {
+  outline: none;
+  border: none;
+}
+.records_panel-outer {
+  text-align: center;
+}
+.records_panel {
+  margin: 12px;
+  margin-top: 0px;
+  -webkit-box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.4);
+  display: inline-block;
+  text-align: left;
+  background-color: aliceblue;
+  background-color: rgb(242, 238, 200);
+  background-color: rgb(202, 241, 242);
+  width: auto;
+  padding: 6px;
+  border-radius: 6px;
+}
+.img_icon {
+  width: 23px;
+  margin: 3px;
+  cursor: pointer;
+}
+.record_list {
+  list-style-type: none;
+  padding: 0px;
+}
+.range_container {
+  width: auto;
+  padding: 6px;
+}
+.range_container input[type=range] {
+  width: 100%;
+  display: block;
+}
+.check_container {
+  width: auto;
+  padding: 6px;
+}
+
+.terminal {
+  margin-top: 6px;
+  padding-bottom: 3px;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  max-height: 300px;
+  min-height: 300px;
+  background-color: black;
+  color: #499003;
+  font-size: 16px;
+}
+
+.terminal .ok {
+  color: chartreuse;
+}
+
+.terminal .error {
+  color: rgb(255, 46, 0);
+}
+
+.author {
+  text-align: right;
+}
+
+.author a {
+  font-family: Copperplate;
+  text-decoration: none;
+  color: rgb(70, 150, 153);
+}
+.author span {
+  cursor: default;
+  font-family: Copperplate;
+  text-decoration: none;
+  color: rgb(70, 150, 153);
+}
