@@ -8,3 +8,4 @@
 
 A demo for [Rustpotter](https://github.com/GiviMAD/rustpotter) (an open source wake word spotter forged in rust) running in the browser.
 
+You can use it [here](https://givimad.github.io/rustpotter-create-model-demo/).
