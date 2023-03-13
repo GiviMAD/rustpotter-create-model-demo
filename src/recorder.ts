@@ -1,7 +1,8 @@
 import { WaveFile } from "wavefile";
 export class WavRecorder {
     private sampleRate: number;
-    private recordGain?: GainNode;
+    private gain: number = 1;
+    private gainNode?: GainNode;
     private stream?: MediaStream;
     private chunks: Float32Array[] = [];
     private processor?: ScriptProcessorNode;
@@ -9,15 +10,18 @@ export class WavRecorder {
     constructor(private audioContext: AudioContext) {
         this.sampleRate = audioContext.sampleRate;
     }
+    setGain(gain: number) {
+        this.gain = gain;
+    }
     async start() {
         if (this.recording) throw new Error("Already recording");
         this.recording = true;
         await this.audioContext.resume();
         this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        this.recordGain = new GainNode(this.audioContext);
-        this.recordGain.gain.value = 1;
+        this.gainNode = new GainNode(this.audioContext);
+        this.gainNode.gain.value = this.gain;
         const microphone = this.audioContext.createMediaStreamSource(this.stream);
-        microphone.connect(this.recordGain);
+        microphone.connect(this.gainNode);
         let onRecordStart: Function | null = null;
         this.processor = this.audioContext.createScriptProcessor(4096, 1, 1);
         this.processor.addEventListener("audioprocess", ({ inputBuffer }) => {
@@ -33,7 +37,7 @@ export class WavRecorder {
                 this.chunks.push(new Float32Array(inputData));
             }
         });
-        this.recordGain.connect(this.processor);
+        this.gainNode.connect(this.processor);
         this.processor.connect(this.audioContext.destination);
         return new Promise(resolve => onRecordStart = resolve);
     }
@@ -41,8 +45,8 @@ export class WavRecorder {
         if (!this.recording) throw new Error("No record");
         this.recording = false;
         this.stream?.getTracks().forEach(t => t.stop());
-        if (this.recordGain && this.processor) {
-            this.recordGain.disconnect();
+        if (this.gainNode && this.processor) {
+            this.gainNode.disconnect();
             this.processor.disconnect();
         }
         const samples = this.chunks.reduce((acc, chunk) => {

@@ -3,10 +3,13 @@ import rustpotterInit, { Wakeword } from 'rustpotter-web';
 import { WaveFile } from "wavefile";
 (async () => {
     const USER_NAME = "rustpotter@Builder";
+    let stopRecordTimeoutRef = null as any;
     let state = {
         recordSupported: false,
         recorder: null as WavRecorder | null,
         records: [] as { name: string, data: ArrayBuffer }[],
+        micGain: 1,
+        stopSec: null as number | null,
         wakewordName: '',
     };
     window.addEventListener('load', onWindowsLoad, { once: true });
@@ -18,34 +21,52 @@ import { WaveFile } from "wavefile";
             printError("Unable to record on this browser :(");
         }
         document.querySelector("#wakeword_name")?.addEventListener('input', onWakewordNameChange);
+        document.querySelector("#mic_gain")?.addEventListener('input', onMicGainInput);
+        document.querySelector("#stop_sec")?.addEventListener('input', onStopSecInput);
         document.querySelector("#record")?.addEventListener('click', onRecordStart);
         document.querySelector("#stop")?.addEventListener('click', onRecordStop);
         document.querySelector("#build")?.addEventListener('click', onBuildModel);
         const hiddenUploadInput: HTMLElement | null = document.querySelector("#hidden_upload");
         hiddenUploadInput?.addEventListener('change', onRecordUpload);
         document.querySelector("#upload")?.addEventListener('click', () => hiddenUploadInput?.click());
-        enableElement("record", state.recordSupported);
-        enableElement("upload");
+        enableInputs();
     } catch (error) {
         return onError(error);
     }
     // event listeners
+    function onMicGainInput(ev: Event) {
+        state.micGain = Number((ev.target as HTMLInputElement).value);
+    }
+    function onStopSecInput(ev: Event) {
+        const value = (ev.target as HTMLInputElement).value;
+        const numberValue = Number((ev.target as HTMLInputElement).value?.trim());
+        state.stopSec = value != null && value.length && !isNaN(numberValue) ? numberValue : null;
+    }
     function onRecordStart(_: Event) {
         printLog("loading recorder...");
+        state.recorder?.setGain(state.micGain);
         state.recorder?.start()
             .then(() => {
                 printLog("recording...");
+                if (state.stopSec) {
+                    stopRecordTimeoutRef = setTimeout(onRecordStop, state.stopSec * 1000);
+                }
+                enableElement("stop");
             }).catch(function (e) {
                 onError(e);
-                enableElement("record");
-                enableElement("upload");
-                enableElement("stop", false);
+                enableInputs();
             });
+        enableElement("mic_gain", false);
+        enableElement("stop_sec", false);
+        enableElement("build", false);
         enableElement("record", false);
         enableElement("upload", false);
-        enableElement("stop");
     }
-    function onRecordStop(_: Event) {
+    function onRecordStop() {
+        if (stopRecordTimeoutRef) {
+            clearTimeout(stopRecordTimeoutRef);
+            stopRecordTimeoutRef = null;
+        }
         enableElement("stop", false);
         state.recorder?.end().then((wavFile) => {
             let fileName = new Date().toISOString() + ".wav";
@@ -55,16 +76,21 @@ import { WaveFile } from "wavefile";
                 fileName = `${state.wakewordName.replaceAll(' ', '_')}(T${hour}).wav`;
             }
             onNewRecord(wavFile, fileName).catch(onError);
-        }).catch((err) => console.error("End record failed: ", err));
+        }).catch((err) => {
+            console.error("End record failed: ", err);
+            enableInputs();
+        });
         printLog("record finished");
     }
     function onWakewordNameChange(ev: Event) {
         state.wakewordName = (ev.target as HTMLInputElement).value?.trim();
-        onRecordInfoChange();
+        enableInputs();
     }
-    function onRecordInfoChange() {
-        const allowMoreRecords = state.records.length < 10;
-        enableElement("record", state.recordSupported && allowMoreRecords);
+    function enableInputs() {
+        const allowMoreRecords = state.records.length < 20;
+        enableElement("mic_gain", true);
+        enableElement("stop_sec", true);
+        enableElement("record", !!state.wakewordName.length && state.recordSupported && allowMoreRecords);
         enableElement("upload", allowMoreRecords);
         enableElement("build", state.wakewordName.length > 0 && state.records.length > 0);
     }
@@ -86,13 +112,13 @@ import { WaveFile } from "wavefile";
             state.records.splice(state.records.indexOf(recordData), 1);
             listElement.remove();
             URL.revokeObjectURL(url);
-            onRecordInfoChange();
+            enableInputs();
         };
         listElement.appendChild(audio);
         listElement.appendChild(downloadIcon);
         listElement.appendChild(removeIcon);
         document.querySelector("#records")?.appendChild(listElement);
-        onRecordInfoChange();
+        enableInputs();
     }
     function onRecordUpload(evt: Event) {
         Array.from((evt.target as HTMLInputElement | null)?.files ?? []).slice(0, 6 - state.records.length).forEach((file: File) => {
@@ -143,16 +169,15 @@ import { WaveFile } from "wavefile";
     function onWindowsLoad() {
         const versionLink = document.querySelector<HTMLAnchorElement>("#rustpotter_version");
         if (versionLink) {
-            versionLink.innerHTML = "rustpotter-v" + APP_VERSION;
-            versionLink.href = "https://github.com/GiviMAD/rustpotter-cli/releases/tag/v" + APP_VERSION;
+            versionLink.innerHTML = "rustpotter-v" + LIB_VERSION;
+            versionLink.href = "https://github.com/GiviMAD/rustpotter-cli/releases/tag/v" + LIB_VERSION;
         }
         printLog("this is a demo web site for creating rustpotter models");
     }
     // utils
     function enableElement(id: string, enabled = true) {
         const el = document.querySelector<any>("#" + id);
-        if (el)
-            el.disabled = !enabled;
+        if (el) el.disabled = !enabled;
     }
     function printLog(str: string) {
         console.log(str);

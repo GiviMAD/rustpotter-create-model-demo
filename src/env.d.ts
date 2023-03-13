@@ -1,1 +1,1 @@
-declare const APP_VERSION: string;
+declare const LIB_VERSION: string;
