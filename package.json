@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "opus-recorder": "^8.0.5",
-    "rustpotter-web": "2.0.0-beta.4",
+    "rustpotter-web": "2.0.1",
     "wavefile": "^11.0.0"
   },
   "devDependencies": {
