@@ -24,13 +24,16 @@ body {
 .records_panel span {
   margin-left: 6px;
 }
+
 .records_panel input[type=text] {
   outline: none;
   border: none;
 }
+
 .records_panel-outer {
   text-align: center;
 }
+
 .records_panel {
   margin: 12px;
   margin-top: 0px;
@@ -45,26 +48,48 @@ body {
   padding: 6px;
   border-radius: 6px;
 }
+
 .img_icon {
   width: 23px;
   margin: 3px;
   cursor: pointer;
 }
+
 .record_list {
   list-style-type: none;
   padding: 0px;
 }
+
 .range_container {
   width: auto;
   padding: 6px;
 }
+
 .range_container input[type=range] {
   width: 100%;
   display: block;
 }
-.check_container {
+
+.input_container {
   width: auto;
   padding: 6px;
+}
+
+.input_container input[type=range] {
+  width: 100%;
+  display: block;
+}
+
+.input_container input[type=number] {
+  width: 50px;
+}
+
+.input_container label {
+  vertical-align: middle;
+}
+
+.input_container output {
+  vertical-align: middle;
 }
 
 .terminal {
@@ -99,6 +124,7 @@ body {
   text-decoration: none;
   color: rgb(70, 150, 153);
 }
+
 .author span {
   cursor: default;
   font-family: Copperplate;

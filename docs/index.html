@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <title>Rustpotter Build Model Demo!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+  
+  <script type="module" crossorigin src="/assets/index-eb949fe2.js"></script>
+  <link rel="stylesheet" href="/assets/index-36b2bd9f.css">
 </head>
 
 <body>
@@ -15,19 +18,30 @@
     </div>
     <br>
     <div class="text">
-      <span>This is a demo website for </span><a href="https://github.com/GiviMAD/rustpotter">Rustpotter</a><span>, an open source wake word spotter forged in rust.</span>
+      <span>This is a demo website for </span><a href="https://github.com/GiviMAD/rustpotter">Rustpotter</a><span>,
+        an open source wakeword spotter forged in rust.</span>
       <br>
     </div>
   </div>
   <div class="records_panel-outer">
     <div id="wakeword_panel" class="records_panel">
       <span>Name: </span>
-      <input id="wakeword_name" type="text" autocomplete="false"/>
+      <input id="wakeword_name" type="text" autocomplete="false" />
+      <div class="input_container">
+        <label for="mic_gain">Microphone Gain: </label>
+        <output>1</output>
+        <input type="range" id="mic_gain" min="0.1" max="1" value="1" step="0.1"
+          oninput="this.previousElementSibling.value = this.value">
+      </div>
+      <div class="input_container">
+        <label for="mic_gain">Stop Seconds: </label>
+        <input id="stop_sec" type="number" autocomplete="false" min="1" />
+      </div>
       <div id="btn_panel" class="btn-panel">
         <button id="record" disabled="true" type="button">Start Recording</button>
         <button id="stop" disabled="true" type="button">Stop Recording</button>
         <button id="upload" disabled="true" type="button">From Files</button>
-        <input type="file" id="hidden_upload" accept="audio/x-wav" multiple hidden/>
+        <input type="file" id="hidden_upload" accept="audio/x-wav" multiple hidden />
       </div>
       <span>Records: </span>
       <ul class="record_list" id="records"></ul>
@@ -38,13 +52,13 @@
   </div>
   <div class="terminal">
     <code id="terminal" contenteditable="false">
-    </code>
+      </code>
   </div>
   <div class="author">
     <a id="rustpotter_version"></a>
     <a href="https://github.com/GiviMAD">@GiviMAD</a>
   </div>
-  <script src="index.js"></script>
+  
 </body>
 
 </html>
