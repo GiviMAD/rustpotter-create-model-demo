@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:web": "tsc && vite build --outDir docs",
+    "build:web": "tsc && vite build --outDir docs --base /rustpotter-create-model-demo",
     "preview": "vite preview"
   },
   "dependencies": {
