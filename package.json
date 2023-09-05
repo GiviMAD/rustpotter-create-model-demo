@@ -1,6 +1,6 @@
 {
   "name": "rustpotter-create-model-demo",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Demo for rustpotter model creation, rustpotter is an open source wake word spotter forged in rust",
   "main": "dist/index.js",
   "license": "Apache-2.0",
@@ -20,11 +20,11 @@
   },
   "dependencies": {
     "opus-recorder": "^8.0.5",
-    "rustpotter-web": "2.0.1",
+    "rustpotter-web": "3.0.0",
     "wavefile": "^11.0.0"
   },
   "devDependencies": {
-    "typescript": "^4.9.5",
-    "vite": "^4.1.4"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
   }
 }

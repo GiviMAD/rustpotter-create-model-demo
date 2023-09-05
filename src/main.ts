@@ -1,5 +1,5 @@
 import { WavRecorder } from "./recorder";
-import rustpotterInit, { Wakeword } from 'rustpotter-web';
+import rustpotterInit, { WakewordRefCreator } from 'rustpotter-web';
 import { WaveFile } from "wavefile";
 (async () => {
     const USER_NAME = "rustpotter@Builder";
@@ -13,26 +13,6 @@ import { WaveFile } from "wavefile";
         wakewordName: '',
     };
     window.addEventListener('load', onWindowsLoad, { once: true });
-    try {
-        state.recordSupported = isRecordingSupported();
-        if (state.recordSupported) {
-            state.recorder = new WavRecorder(new AudioContext());
-        } else {
-            printError("Unable to record on this browser :(");
-        }
-        document.querySelector("#wakeword_name")?.addEventListener('input', onWakewordNameChange);
-        document.querySelector("#mic_gain")?.addEventListener('input', onMicGainInput);
-        document.querySelector("#stop_sec")?.addEventListener('input', onStopSecInput);
-        document.querySelector("#record")?.addEventListener('click', onRecordStart);
-        document.querySelector("#stop")?.addEventListener('click', onRecordStop);
-        document.querySelector("#build")?.addEventListener('click', onBuildModel);
-        const hiddenUploadInput: HTMLElement | null = document.querySelector("#hidden_upload");
-        hiddenUploadInput?.addEventListener('change', onRecordUpload);
-        document.querySelector("#upload")?.addEventListener('click', () => hiddenUploadInput?.click());
-        enableInputs();
-    } catch (error) {
-        return onError(error);
-    }
     // event listeners
     function onMicGainInput(ev: Event) {
         state.micGain = Number((ev.target as HTMLInputElement).value);
@@ -141,7 +121,7 @@ import { WaveFile } from "wavefile";
         const wasmModuleUrl = new URL('../node_modules/rustpotter-web/rustpotter_wasm_bg.wasm', import.meta.url);
         try {
             await rustpotterInit(wasmModuleUrl);
-            const wakeword = Wakeword.new(state.wakewordName);
+            const wakeword = WakewordRefCreator.new(state.wakewordName);
             printLog("generating wakeword model...");
             state.records.forEach(({ name, data }) => wakeword.addFile(name, new Uint8Array(data)));
             const modelBytes = wakeword.saveToBytes();
@@ -172,6 +152,27 @@ import { WaveFile } from "wavefile";
             versionLink.innerHTML = "rustpotter-v" + LIB_VERSION;
             versionLink.href = "https://github.com/GiviMAD/rustpotter-cli/releases/tag/v" + LIB_VERSION;
         }
+        try {
+            state.recordSupported = isRecordingSupported();
+            if (state.recordSupported) {
+                state.recorder = new WavRecorder(new AudioContext());
+            } else {
+                printError("Unable to record on this browser :(");
+                return;
+            }
+            document.querySelector("#wakeword_name")?.addEventListener('input', onWakewordNameChange);
+            document.querySelector("#mic_gain")?.addEventListener('input', onMicGainInput);
+            document.querySelector("#stop_sec")?.addEventListener('input', onStopSecInput);
+            document.querySelector("#record")?.addEventListener('click', onRecordStart);
+            document.querySelector("#stop")?.addEventListener('click', onRecordStop);
+            document.querySelector("#build")?.addEventListener('click', onBuildModel);
+            const hiddenUploadInput: HTMLElement | null = document.querySelector("#hidden_upload");
+            hiddenUploadInput?.addEventListener('change', onRecordUpload);
+            document.querySelector("#upload")?.addEventListener('click', () => hiddenUploadInput?.click());
+            enableInputs();
+        } catch (error) {
+            return onError(error);
+        }
         printLog("this is a demo web site for creating rustpotter models");
     }
     // utils
@@ -200,7 +201,7 @@ import { WaveFile } from "wavefile";
         printError(error instanceof Error ? "unexpected error:" + error.message : error + '', false);
     }
     function isRecordingSupported() {
-        const isUserMediaSupported = !!(window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia);
-        return AudioContext && isUserMediaSupported;
+        const userMediaSupported = !!(window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia);
+        return window.AudioContext && userMediaSupported;
     }
 })();
