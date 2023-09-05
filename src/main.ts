@@ -173,7 +173,7 @@ import { WaveFile } from "wavefile";
         } catch (error) {
             return onError(error);
         }
-        printLog("this is a demo web site for creating rustpotter models");
+        printLog("this is a demo web site for creating rustpotter wakeword references");
     }
     // utils
     function enableElement(id: string, enabled = true) {
